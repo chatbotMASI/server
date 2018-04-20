@@ -27,6 +27,7 @@ repositories {
 dependencies {
   compile('org.springframework.boot:spring-boot-starter-data-mongodb')
   compile 'org.springframework.boot:spring-boot-starter-web'
+  compile 'com.ibm.watson.developer_cloud:java-sdk:5.2.0'
   runtime('org.springframework.boot:spring-boot-devtools')
   testCompile('org.springframework.boot:spring-boot-starter-test')
 }
