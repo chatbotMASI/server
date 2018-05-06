@@ -4,17 +4,15 @@ package pl.lodz.p.it.chatpol.masichatpol.dto;
 
 import com.ibm.watson.developer_cloud.assistant.v1.model.Context;
 
-import java.util.List;
-
 public class MessageDto {
   private String message;
   private Context context;
-  private List<String> response;
+  private String response;
 
   public MessageDto() {
   }
 
-  public MessageDto(Context context, List<String> response) {
+  public MessageDto(Context context, String response) {
     this.context = context;
     this.response = response;
   }
@@ -35,11 +33,11 @@ public class MessageDto {
     this.context = context;
   }
 
-  public List<String> getResponse() {
+  public String getResponse() {
     return response;
   }
 
-  public void setResponse(List<String> response) {
+  public void setResponse(String response) {
     this.response = response;
   }
 

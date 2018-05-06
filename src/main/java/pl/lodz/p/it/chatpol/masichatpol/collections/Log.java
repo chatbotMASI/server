@@ -15,12 +15,6 @@ public class Log {
   @NotEmpty
   private String conversationId;
 
-  @NotNull
-  @NotEmpty
-  private String question;
-
-  @NotNull
-  @NotEmpty
   private String userReply;
 
   @NotNull
@@ -30,9 +24,8 @@ public class Log {
   public Log() {
   }
 
-  public Log(String conversationId, String question, String userReply, String watsonReply) {
+  public Log(String conversationId, String userReply, String watsonReply) {
     this.conversationId = conversationId;
-    this.question = question;
     this.userReply = userReply;
     this.watsonReply = watsonReply;
   }
@@ -51,14 +44,6 @@ public class Log {
 
   public void setConversationId(String conversationId) {
     this.conversationId = conversationId;
-  }
-
-  public String getQuestion() {
-    return question;
-  }
-
-  public void setQuestion(String question) {
-    this.question = question;
   }
 
   public String getUserReply() {

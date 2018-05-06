@@ -5,7 +5,9 @@ import com.ibm.watson.developer_cloud.assistant.v1.model.InputData;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageOptions;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageResponse;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.it.chatpol.masichatpol.collections.Log;
 import pl.lodz.p.it.chatpol.masichatpol.dto.MessageDto;
+import pl.lodz.p.it.chatpol.masichatpol.repositories.LogsRepository;
 
 @Service
 public class ChatService {
@@ -15,19 +17,26 @@ public class ChatService {
   private static final String VERSION = "2018-02-16";
   private static final String REGION = "https://gateway.watsonplatform.net/assistant/api";
 
+  private final LogsRepository repository;
+
+  public ChatService(LogsRepository repository) {
+    this.repository = repository;
+  }
+
   public MessageDto sendMessageToWatson(MessageDto message) {
     Assistant service = new Assistant(VERSION);
     service.setUsernameAndPassword(USERNAME, PASSWORD);
     service.setEndPoint(REGION);
-    InputData input = new InputData.Builder(message.getMessage()).build();
 
     MessageOptions options = new MessageOptions.Builder(WORKSPACE_ID)
-        .input(input)
+        .input(message.getMessage() == null ? null : new InputData.Builder(message.getMessage()).build())
         .context(message.getContext())
         .build();
 
     MessageResponse messageResponse = service.message(options).execute();
 
-    return new MessageDto(messageResponse.getContext(), messageResponse.getOutput().getText());
+    repository.save(new Log(messageResponse.getContext().getConversationId(), message.getMessage(), String.join(", ", messageResponse.getOutput().getText())));
+
+    return new MessageDto(messageResponse.getContext(), String.join("", messageResponse.getOutput().getText()));
   }
 }
