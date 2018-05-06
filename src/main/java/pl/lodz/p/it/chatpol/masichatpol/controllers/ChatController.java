@@ -14,6 +14,7 @@ public class ChatController {
     this.chatService = chatService;
   }
 
+  @CrossOrigin(origins = "http://localhost:3006")
   @RequestMapping(value = "/chat", method = RequestMethod.POST)
   public @ResponseBody
   MessageDto chat(@RequestBody(required = false) MessageDto message) {
