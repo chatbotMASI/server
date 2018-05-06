@@ -1,7 +1,7 @@
 package pl.lodz.p.it.chatpol.masichatpol.controllers;
 
-import com.ibm.watson.developer_cloud.assistant.v1.model.MessageResponse;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.it.chatpol.masichatpol.dto.MessageDto;
 import pl.lodz.p.it.chatpol.masichatpol.services.ChatService;
 
 
@@ -14,9 +14,9 @@ public class ChatController {
     this.chatService = chatService;
   }
 
-  @RequestMapping(value = "/watson", method = RequestMethod.POST)
+  @RequestMapping(value = "/chat", method = RequestMethod.POST)
   public @ResponseBody
-  MessageResponse sayHello(@RequestBody(required = false) String message) {
+  MessageDto chat(@RequestBody(required = false) MessageDto message) {
     return chatService.sendMessageToWatson(message);
   }
 

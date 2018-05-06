@@ -5,6 +5,7 @@ import com.ibm.watson.developer_cloud.assistant.v1.model.InputData;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageOptions;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageResponse;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.it.chatpol.masichatpol.dto.MessageDto;
 
 @Service
 public class ChatService {
@@ -14,16 +15,19 @@ public class ChatService {
   private static final String VERSION = "2018-02-16";
   private static final String REGION = "https://gateway.watsonplatform.net/assistant/api";
 
-  public MessageResponse sendMessageToWatson(String message) {
+  public MessageDto sendMessageToWatson(MessageDto message) {
     Assistant service = new Assistant(VERSION);
     service.setUsernameAndPassword(USERNAME, PASSWORD);
     service.setEndPoint(REGION);
-    InputData input = new InputData.Builder(message).build();
+    InputData input = new InputData.Builder(message.getMessage()).build();
 
     MessageOptions options = new MessageOptions.Builder(WORKSPACE_ID)
         .input(input)
+        .context(message.getContext())
         .build();
 
-    return service.message(options).execute();
+    MessageResponse messageResponse = service.message(options).execute();
+
+    return new MessageDto(messageResponse.getContext(), messageResponse.getOutput().getText());
   }
 }
