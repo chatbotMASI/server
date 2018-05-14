@@ -1,6 +1,7 @@
 package pl.lodz.p.it.chatpol.masichatpol.services;
 
 import com.ibm.watson.developer_cloud.assistant.v1.Assistant;
+import com.ibm.watson.developer_cloud.assistant.v1.model.Context;
 import com.ibm.watson.developer_cloud.assistant.v1.model.InputData;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageOptions;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageResponse;
@@ -23,6 +24,21 @@ public class ChatService {
     this.repository = repository;
   }
 
+  private MessageDto parseButtonsAndLink(String message, Context context) {
+    String[] buttons = null;
+    String link = null;
+
+    if (message.contains("[[")) {
+      buttons = message.substring(message.indexOf("[") + 2, message.indexOf("]") - 1).split(",");
+      message = message.substring(0, message.indexOf("["));
+    }
+    if (message.contains("{{")) {
+      link = message.substring(message.indexOf("{") + 2, message.indexOf("}") - 1);
+      message = message.substring(0, message.indexOf("{"));
+    }
+    return new MessageDto(context, message, link, buttons);
+  }
+
   public MessageDto sendMessageToWatson(MessageDto message) {
     Assistant service = new Assistant(VERSION);
     service.setUsernameAndPassword(USERNAME, PASSWORD);
@@ -36,21 +52,9 @@ public class ChatService {
     MessageResponse messageResponse = service.message(options).execute();
 
     String strOutputText = String.join("", messageResponse.getOutput().getText());
-    String[] buttons = null;
-    String link = null;
-
-    if (strOutputText.contains("[[")) {
-      buttons = strOutputText.substring(strOutputText.indexOf("[") + 2, strOutputText.indexOf("]") - 1).split(",");
-      strOutputText = strOutputText.substring(0, strOutputText.indexOf("["));
-    }
-
-    if (strOutputText.contains("{{")) {
-      link = strOutputText.substring(strOutputText.indexOf("{") + 2, strOutputText.indexOf("}") -1);
-      strOutputText = strOutputText.substring(0, strOutputText.indexOf("{"));
-    }
 
     repository.save(new Log(messageResponse.getContext().getConversationId(), message.getMessage(), strOutputText));
 
-    return new MessageDto(messageResponse.getContext(), strOutputText, link, buttons);
+    return parseButtonsAndLink(strOutputText, messageResponse.getContext());
   }
 }
