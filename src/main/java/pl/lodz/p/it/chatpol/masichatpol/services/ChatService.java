@@ -35,8 +35,22 @@ public class ChatService {
 
     MessageResponse messageResponse = service.message(options).execute();
 
-    repository.save(new Log(messageResponse.getContext().getConversationId(), message.getMessage(), String.join(", ", messageResponse.getOutput().getText())));
+    String strOutputText = String.join("", messageResponse.getOutput().getText());
+    String[] buttons = null;
+    String link = null;
 
-    return new MessageDto(messageResponse.getContext(), String.join("", messageResponse.getOutput().getText()));
+    if (strOutputText.contains("[[")) {
+      buttons = strOutputText.substring(strOutputText.indexOf("[") + 2, strOutputText.indexOf("]") - 1).split(",");
+      strOutputText = strOutputText.substring(0, strOutputText.indexOf("["));
+    }
+
+    if (strOutputText.contains("{{")) {
+      link = strOutputText.substring(strOutputText.indexOf("{") + 2, strOutputText.indexOf("}") -1);
+      strOutputText = strOutputText.substring(0, strOutputText.indexOf("{"));
+    }
+
+    repository.save(new Log(messageResponse.getContext().getConversationId(), message.getMessage(), strOutputText));
+
+    return new MessageDto(messageResponse.getContext(), strOutputText, link, buttons);
   }
 }
