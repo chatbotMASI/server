@@ -29,11 +29,11 @@ public class ChatService {
     String link = null;
 
     if (message.contains("[[")) {
-      buttons = message.substring(message.indexOf("[") + 2, message.indexOf("]") - 1).split(",");
+      buttons = message.substring(message.indexOf("[") + 2, message.indexOf("]")).split(", ");
       message = message.substring(0, message.indexOf("["));
     }
     if (message.contains("{{")) {
-      link = message.substring(message.indexOf("{") + 2, message.indexOf("}") - 1);
+      link = message.substring(message.indexOf("{") + 2, message.indexOf("}"));
       message = message.substring(0, message.indexOf("{"));
     }
     return new MessageDto(context, message, link, buttons);
@@ -52,7 +52,7 @@ public class ChatService {
     MessageResponse messageResponse = service.message(options).execute();
 
     String strOutputText = String.join("", messageResponse.getOutput().getText());
-
+    System.out.println(strOutputText);
     repository.save(new Log(messageResponse.getContext().getConversationId(), message.getMessage(), strOutputText));
 
     return parseButtonsAndLink(strOutputText, messageResponse.getContext());
