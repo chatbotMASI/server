@@ -37,12 +37,6 @@ public class ChatController {
     return chatService.sendMessageToWatson(message, request.getRemoteAddr());
   }
 
-  @GetMapping("/download")
-  public String download(Model model) {
-    model.addAttribute("logs", repository.findAll());
-    return "";
-  }
-
   @CrossOrigin(origins = "*")
   @PostMapping(value = "/usability-rate")
   public void rateUsability(@RequestParam String conversationId, @RequestBody Integer rate) {
