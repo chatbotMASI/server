@@ -6,9 +6,12 @@ import com.ibm.watson.developer_cloud.assistant.v1.model.InputData;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageOptions;
 import com.ibm.watson.developer_cloud.assistant.v1.model.MessageResponse;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.it.chatpol.masichatpol.collections.Dialog;
 import pl.lodz.p.it.chatpol.masichatpol.collections.Log;
 import pl.lodz.p.it.chatpol.masichatpol.dto.MessageDto;
 import pl.lodz.p.it.chatpol.masichatpol.repositories.LogsRepository;
+
+import java.util.Collection;
 
 @Service
 public class ChatService {
@@ -39,7 +42,7 @@ public class ChatService {
     return new MessageDto(context, message, link, buttons);
   }
 
-  public MessageDto sendMessageToWatson(MessageDto message) {
+  public MessageDto sendMessageToWatson(MessageDto message, String remoteAddr) {
     Assistant service = new Assistant(VERSION);
     service.setUsernameAndPassword(USERNAME, PASSWORD);
     service.setEndPoint(REGION);
@@ -50,11 +53,35 @@ public class ChatService {
         .build();
 
     MessageResponse messageResponse = service.message(options).execute();
-
     String strOutputText = String.join("", messageResponse.getOutput().getText());
 
-    repository.save(new Log(messageResponse.getContext().getConversationId(), message.getMessage(), strOutputText));
+    Log log = repository.findByConversationId(messageResponse.getContext().getConversationId()).orElse(new Log(messageResponse.getContext().getConversationId(), remoteAddr));
+    log.getDialog().add(new Dialog(message.getMessage(), strOutputText));
+
+    if (messageResponse.getOutput().getNodesVisited().stream().anyMatch(s -> s.contains("Anything else"))) {
+      log.incrementFailureIndex();
+    } else {
+      log.incrementConversationLength();
+    }
+
+    repository.save(log);
 
     return parseButtonsAndLink(strOutputText, messageResponse.getContext());
+  }
+
+  public void rateUsability(String conversationId, Integer rate) {
+    Log log = repository.findByConversationId(conversationId).get();
+    log.setUsabilityScore(rate);
+    repository.save(log);
+  }
+
+  public void rateEffectiveness(String conversationId, Integer rate) {
+    Log log = repository.findByConversationId(conversationId).get();
+    log.setEffectivenessScore(rate);
+    repository.save(log);
+  }
+
+  public Collection<Log> getLogs() {
+    return repository.findAll();
   }
 }
