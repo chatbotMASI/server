@@ -1,7 +1,6 @@
 package pl.lodz.p.it.chatpol.masichatpol.dto;
 
 
-
 import com.ibm.watson.developer_cloud.assistant.v1.model.Context;
 
 import java.util.Arrays;

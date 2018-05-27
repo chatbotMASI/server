@@ -23,11 +23,13 @@ repositories {
   mavenCentral()
 }
 
-
 dependencies {
   compile('org.springframework.boot:spring-boot-starter-data-mongodb')
   compile 'org.springframework.boot:spring-boot-starter-web'
   compile 'com.ibm.watson.developer_cloud:java-sdk:5.2.0'
+  compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+  compile group: 'org.xhtmlrenderer', name: 'flying-saucer-core', version: '9.1.12'
+  compile group: 'org.xhtmlrenderer', name: 'flying-saucer-pdf-itext5', version: '9.1.12'
   runtime('org.springframework.boot:spring-boot-devtools')
   testCompile('org.springframework.boot:spring-boot-starter-test')
 }

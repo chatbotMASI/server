@@ -11,28 +11,33 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
-@EnableMongoRepositories(basePackages="pl.lodz.p.it.chatpol.masichatpol.repositories")
+@EnableMongoRepositories(basePackages = "pl.lodz.p.it.chatpol.masichatpol.repositories")
 public class MongoConfig extends AbstractMongoConfiguration {
 
-    private final Environment env;
+  private final Environment env;
 
-    @Autowired
-    public MongoConfig(Environment env) {
-        this.env = env;
-    }
+  @Autowired
+  public MongoConfig(Environment env) {
+    this.env = env;
+  }
 
-    @Bean
-    public ValidatingMongoEventListener validatingMongoEventListener() {
-        return new ValidatingMongoEventListener(validator());
-    }
+  @Bean
+  public ValidatingMongoEventListener validatingMongoEventListener() {
+    return new ValidatingMongoEventListener(validator());
+  }
 
-    @Bean
-    public LocalValidatorFactoryBean validator() {
-        return new LocalValidatorFactoryBean();
-    }
+  @Bean
+  public LocalValidatorFactoryBean validator() {
+    return new LocalValidatorFactoryBean();
+  }
 
-    @Override
-    public MongoClient mongoClient() { return new MongoClient("localhost", 27017); }
-    @Override
-    protected String getDatabaseName() { return "chatpolDB"; }
+  @Override
+  public MongoClient mongoClient() {
+    return new MongoClient("localhost", 27017);
+  }
+
+  @Override
+  protected String getDatabaseName() {
+    return "chatpolDB";
+  }
 }

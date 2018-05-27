@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+
+  <link type="text/css" rel="stylesheet" media="all"
+        href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css"/>
+
+  <style>
+  @page {
+  margin: 0cm;
+  size: A4 portrait;
+  }
+
+  .container {
+  margin: 0 auto !important;
+  max-width: 1280px !important;
+  width: 90% !important;
+   -webkit-box-sizing: inherit;
+   -moz-box-sizing: inherit;
+  box-sizing: inherit;
+  }
+  </style>
+
+  <title>ChatPOL conversations report</title>
+ </head>
+<body style="background-color: #ddd">
+<nav class="grey darken-4">
+  <div class="nav-wrapper">
+    <div class="container blue-grey darken-2">
+      <span class="left">Conversations Report</span>
+      <span class="right">ChatPOL</span>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <div class="card blue-grey darken-1">
+    <div class="card-content white-text">
+      <div class="col s12">
+        <span>Number of test sessions (conversations): [[${#lists.size(logs)}]]</span>
+      </div>
+      <div class="col s12">
+        <span>Average conversation length: [[${acl}]]</span>
+      </div>
+      <div class="col s12">
+        <span>Average chatbot’s failure index: [[${cfi}]]</span>
+      </div>
+      <div class="col s12">
+        <span>Average chatbot’s usability score: [[${cus}]]</span>
+      </div>
+      <div class="col s12">
+        <span>Average chatbot’s effectiveness score: [[${ces}]]</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th>User's IP</th>
+        <th>ACL</th>
+        <th>CFI</th>
+        <th>CUS</th>
+        <th>CES</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="log : ${logs}">
+        <th th:text="${log.clientIpAddress}"></th>
+        <td th:text="${log.conversationLength}"></td>
+        <td th:text="${log.failureIndex}"></td>
+        <td th:text="${log.usabilityScore}"></td>
+        <td th:text="${log.effectivenessScore}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script media="all"
+        src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>
