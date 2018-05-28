@@ -11,6 +11,7 @@ public class MessageDto {
   private String response;
   private String link;
   private String[] buttons;
+  private String ipAddress;
 
   public MessageDto() {
   }
@@ -60,6 +61,14 @@ public class MessageDto {
 
   public void setLink(String link) {
     this.link = link;
+  }
+
+  public String getIpAddress() {
+    return ipAddress;
+  }
+
+  public void setIpAddress(String ipAddress) {
+    this.ipAddress = ipAddress;
   }
 
   @Override

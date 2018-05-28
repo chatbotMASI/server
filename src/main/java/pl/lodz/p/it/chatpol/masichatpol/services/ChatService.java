@@ -42,7 +42,7 @@ public class ChatService {
     return new MessageDto(context, message, link, buttons);
   }
 
-  public MessageDto sendMessageToWatson(MessageDto message, String remoteAddr) {
+  public MessageDto sendMessageToWatson(MessageDto message) {
     Assistant service = new Assistant(VERSION);
     service.setUsernameAndPassword(USERNAME, PASSWORD);
     service.setEndPoint(REGION);
@@ -55,7 +55,7 @@ public class ChatService {
     MessageResponse messageResponse = service.message(options).execute();
     String strOutputText = String.join("", messageResponse.getOutput().getText());
 
-    Log log = repository.findByConversationId(messageResponse.getContext().getConversationId()).orElse(new Log(messageResponse.getContext().getConversationId(), remoteAddr));
+    Log log = repository.findByConversationId(messageResponse.getContext().getConversationId()).orElse(new Log(messageResponse.getContext().getConversationId(), message.getIpAddress()));
     log.getDialog().add(new Dialog(message.getMessage(), strOutputText));
 
     if (messageResponse.getOutput().getNodesVisited().stream().anyMatch(s -> s.contains("Anything else"))) {

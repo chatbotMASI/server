@@ -4,7 +4,6 @@ import com.itextpdf.text.DocumentException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.chatpol.masichatpol.collections.Log;
 import pl.lodz.p.it.chatpol.masichatpol.dto.MessageDto;
@@ -12,7 +11,6 @@ import pl.lodz.p.it.chatpol.masichatpol.repositories.LogsRepository;
 import pl.lodz.p.it.chatpol.masichatpol.services.ChatService;
 import pl.lodz.p.it.chatpol.masichatpol.utils.PdfGeneratorUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -33,8 +31,8 @@ public class ChatController {
   @CrossOrigin(origins = "*")
   @PostMapping(value = "/chat")
   public @ResponseBody
-  MessageDto chat(@RequestBody(required = false) MessageDto message, HttpServletRequest request) {
-    return chatService.sendMessageToWatson(message, request.getRemoteAddr());
+  MessageDto chat(@RequestBody(required = false) MessageDto message) {
+    return chatService.sendMessageToWatson(message);
   }
 
   @CrossOrigin(origins = "*")
