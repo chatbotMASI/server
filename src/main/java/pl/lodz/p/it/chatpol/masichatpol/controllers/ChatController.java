@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.chatpol.masichatpol.collections.Log;
 import pl.lodz.p.it.chatpol.masichatpol.dto.MessageDto;
-import pl.lodz.p.it.chatpol.masichatpol.repositories.LogsRepository;
 import pl.lodz.p.it.chatpol.masichatpol.services.ChatService;
 import pl.lodz.p.it.chatpol.masichatpol.utils.PdfGeneratorUtil;
 
@@ -21,7 +20,7 @@ public class ChatController {
   private final ChatService chatService;
   private final PdfGeneratorUtil pdfGenerator;
 
-  public ChatController(ChatService chatService,  PdfGeneratorUtil pdfGenerator) {
+  public ChatController(ChatService chatService, PdfGeneratorUtil pdfGenerator) {
     this.chatService = chatService;
     this.pdfGenerator = pdfGenerator;
   }
