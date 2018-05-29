@@ -28,10 +28,10 @@ public class PdfGeneratorUtil {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Context ctx = new Context();
     ctx.setVariable("logs", logs);
-    ctx.setVariable("acl", String.format("%.2f", logs.stream().mapToInt(Log::getConversationLength).average().getAsDouble()));
-    ctx.setVariable("cfi", String.format("%.2f", logs.stream().mapToInt(Log::getFailureIndex).average().getAsDouble()));
-    ctx.setVariable("cus", String.format("%.2f", logs.stream().filter(log -> log.getUsabilityScore() != null).mapToInt(Log::getUsabilityScore).average().getAsDouble()));
-    ctx.setVariable("ces", String.format("%.2f", logs.stream().filter(log -> log.getEffectivenessScore() != null).mapToInt(Log::getEffectivenessScore).average().getAsDouble()));
+    ctx.setVariable("acl", String.format("%.2f", logs.stream().mapToInt(Log::getConversationLength).average().orElse(0)));
+    ctx.setVariable("cfi", String.format("%.2f", logs.stream().mapToInt(Log::getFailureIndex).average().orElse(0)));
+    ctx.setVariable("cus", String.format("%.2f", logs.stream().filter(log -> log.getUsabilityScore() != null).mapToInt(Log::getUsabilityScore).average().orElse(0)));
+    ctx.setVariable("ces", String.format("%.2f", logs.stream().filter(log -> log.getEffectivenessScore() != null).mapToInt(Log::getEffectivenessScore).average().orElse(0)));
     String processedHtml = templateEngine.process(TEMPLATE_NAME, ctx);
     ITextRenderer renderer = new ITextRenderer();
     renderer.setDocumentFromString(processedHtml);
