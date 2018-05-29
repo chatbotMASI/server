@@ -19,11 +19,9 @@ import java.util.Collection;
 public class ChatController {
 
   private final ChatService chatService;
-  private final LogsRepository repository;
   private final PdfGeneratorUtil pdfGenerator;
 
-  public ChatController(ChatService chatService, LogsRepository repository, PdfGeneratorUtil pdfGenerator) {
-    this.repository = repository;
+  public ChatController(ChatService chatService,  PdfGeneratorUtil pdfGenerator) {
     this.chatService = chatService;
     this.pdfGenerator = pdfGenerator;
   }
